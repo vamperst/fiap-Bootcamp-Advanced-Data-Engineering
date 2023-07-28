@@ -68,7 +68,7 @@ Como parte do cloudformation do bootcamp, a notificação de eventos S3 e uma fi
 
     ![](img/sqs-details.png)
 
-3.Vá para o [AWS Glue console](https://console.aws.amazon.com/glue/), clique em **Crawlers** à esquerda no **catálogo de dados** e clique em **Criar crawler**.
+3. Vá para o [AWS Glue console](https://console.aws.amazon.com/glue/), clique em **Crawlers** à esquerda no **catálogo de dados** e clique em **Criar crawler**.
 4. Na página **Set Crawler Properties**, defina o nome para o novo crawler como `Event-Notification-Lab1`, clique em **Next**.
 5. Na página **Choose data sources and classifiers**, selecione **Not Yet** em **Data source configuration**, clique em **Add a data source**. Na **Add data source** e no caminho S3, navegue para `s3://${BUCKET_NAME}/input/lab1/eventnotification/`.Nas **Subsequent crawler runs**, selecione `Crawl based on event`.
 6. Na página **Add a data store**, em **Include SQS ARN** cole o ARN copiado da fila SQS que você salvou anteriormente, e clique em **Add an S3 data source**.
