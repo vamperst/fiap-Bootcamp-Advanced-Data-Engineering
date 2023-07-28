@@ -55,3 +55,49 @@ aws glue start-crawler --name cli-lab1
     
     ![](img/lab1-6.png)
 
+
+### Usando notificações do S3
+
+Como parte do cloudformation do bootcamp, a notificação de eventos S3 e uma fila SQS que recebem a notificação já foram criadas em seu ambiente de laboratório.
+
+1. Vá para o [console do AWS S3](https://console.aws.amazon.com/s3/), clique em Bucket cujo o nome inicia com **glueworkshop**, clique na guia Propriedades e role para baixo até a seção de notificações de eventos. Você deve ver que as notificações de eventos do Amazon S3 foram configuradas para enviar todos os objetos Criar eventos com um filtro na pasta `input/lab1/eventNotification/` para a fila SQS com nomes Glueworkshop-Lab1-Event-queue.
+
+    ![](img/s3-event-notifications.png)
+
+2. Clique no link `Glueworkshop-Lab1-Event-queue` e vá para a página Detalhes da fila do SQS.Copie a fila SQS ARN e salve-a em uma área de transferência.Você precisará disso em uma etapa posterior.
+
+    ![](img/sqs-details.png)
+
+3.Vá para o [AWS Glue console](https://console.aws.amazon.com/glue/), clique em **Crawlers** à esquerda no **catálogo de dados** e clique em **Criar crawler**.
+4. Na página **Set Crawler Properties**, defina o nome para o novo crawler como `Event-Notification-Lab1`, clique em **Next**.
+5. Na página **Choose data sources and classifiers**, selecione **Not Yet** em **Data source configuration**, clique em **Add a data source**. Na **Add data source** e no caminho S3, navegue para `s3://${BUCKET_NAME}/input/lab1/eventnotification/`.Nas **Subsequent crawler runs**, selecione `Crawl based on event`.
+6. Na página **Add a data store**, em **Include SQS ARN** cole o ARN copiado da fila SQS que você salvou anteriormente, e clique em **Add an S3 data source**.
+
+![](img/crawler-sqs.png)
+
+7. na página **Choose data sources and classifiers**, clique em **Next**.
+8. Na página **Configure security settings**, na função IAM existente e escolha a função `AWSGlueServiceRole-glueworkshop` e clique em **Next**.
+9. Na página **Set output and scheduling**, escolha `console_glueworkshop` na lista do banco de dados de destino e defina o prefixo adicionado às tabelas para `event_notification_` e, no **Crawler schedule**, selecione **On demand** e clique em **Next**.
+
+![](img/crawler-summary.png)
+
+10. Clique em **Create crawler**.
+11. Clique na caixa de seleção ao lado do crawler `event-notification-lab1` e clique em **Run crawler** para executar o crawler pela primeira vez. O primeiro rastreamento do crawler usando as notificações de eventos S3 é executado no modo de listagem, executando uma listagem completa do destino do Amazon S3.
+12. Depois que o crawler terminar a primeira execução, clique no link de **view log** para `Event-Notification-Lab1`. Você deve ver o log do CloudWatch da primeira execução como o exemplo.
+
+![](img/view-log.png)
+
+![](img/first-crawl.png)
+
+13. Para executar o crawler utilizando a notificação do S3 você vai copiar um novo Json para o S3 utilizando o comando abaixo no Cloud9.
+
+``` shell
+aws s3 cp  ~/environment/glue-workshop/data/lab4/json/sample.json s3://${BUCKET_NAME}/input/lab1/eventnotification/json/sample.json
+```
+
+14.  De volta ao console do Glue você verá que o crawler começou a executar. A atualização pode levar alguns instântes.
+15. Depois que o crawler terminar a execução, clique no link de **view log** para `Event-Notification-Lab1`. Você deve ver o log do CloudWatch.
+
+![](img/log-view1.png)
+
+![](img/following-crawl.png)
