@@ -52,6 +52,8 @@ $(curl -s 'https://static.us-east-1.prod.workshops.aws/public/690aeb62-f64c-4570
 
 ![](img/s3-1.png)
 
+4. Execute o comando `npm install -g c9` para instalar a ferramenta que irá ajudar a criar e editar documentos no Cloud9
+
 1. Por fim, usaremos um conjunto de dados particionados de uma amostra do clickstream DataSource para trabalhar com a indexação de partição com o Glue catalog no primeiro laboratório. Execute os seguintes comandos no terminal Cloud9 para sincronizar as partições com seu próprio bucket S3.
 
 ```shell
