@@ -30,19 +30,15 @@ v![](img/lab3-cell-zero.png)
 7. Para confirmar que as propriedades acima foram aplicadas adequadamente à definição do trabalho, vá até **Job Details**, rolar para baixo e expandir a seção **Advanced properties** , continue rolando até ver os **Job parameters**. Lá você deve ver as entradas para a interface do usuário do Spark e o caminho do log Spark, bem como entradas para as bibliotecas Python extras e jars.
 8. Agora é hora de executar cada bloco de código que você tem lá no seu notebook, então volte para a guia Notebook.
 
-<div style="background-color:rgba(250, 123, 142, 0.8);">
 > ***Observação!*** Sempre execute um bloco após o outro! Sempre que você executa um bloco, você deve esperar que ele seja concluído antes de prosseguir para o próximo.Além disso, certifique -se de ler e entender o que cada peça de bloco está fazendo antes de executá -las!
-</div>
 
-9. Agora, antes de executar a terceira célula, certifique -se de substituir $ {bucket_name} pelo nome do seu Bucket S3. Em seguida, execute a terceira célula abaixo:
+1. Agora, antes de executar a terceira célula, certifique -se de substituir $ {bucket_name} pelo nome do seu Bucket S3. Em seguida, execute a terceira célula abaixo:
 
 ![](img/lab3-second-cell.png)
 
-<div style="background-color:rgba(95, 198, 95, 0.8);">
 > **Observação!** Esta célula não retorna nenhuma saída.Você deve ver um sinal [*] mostrando quando estiver em execução. Uma vez feito, você verá um número dentro [].Isso significa que terminou.
-</div>
 
-10. Agora, execute a quarta célula que grava a saída em um bucket S3 usando a API do Spark Dataframe. Aguarde finalizar para passar para o próximo passo.
+10.  Agora, execute a quarta célula que grava a saída em um bucket S3 usando a API do Spark Dataframe. Aguarde finalizar para passar para o próximo passo.
 
 ![](img/lab3-third-cell.png)
 
