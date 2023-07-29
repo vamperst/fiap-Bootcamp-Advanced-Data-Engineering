@@ -32,7 +32,7 @@ v![](img/lab3-cell-zero.png)
 
 > ***Observação!*** Sempre execute um bloco após o outro! Sempre que você executa um bloco, você deve esperar que ele seja concluído antes de prosseguir para o próximo.Além disso, certifique -se de ler e entender o que cada peça de bloco está fazendo antes de executá -las!
 
-1. Agora, antes de executar a terceira célula, certifique -se de substituir $ {bucket_name} pelo nome do seu Bucket S3. Em seguida, execute a terceira célula abaixo:
+9. Agora, antes de executar a terceira célula, certifique -se de substituir $ {bucket_name} pelo nome do seu Bucket S3. Em seguida, execute a terceira célula abaixo:
 
 ![](img/lab3-second-cell.png)
 
