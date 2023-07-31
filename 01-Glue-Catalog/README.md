@@ -32,7 +32,7 @@ aws glue create-crawler \
 --name cli-lab1 \
 --role AWSGlueServiceRole-glueworkshop \
 --database-name console_glueworkshop \
---table-prefix cli_ \
+--table-prefix console_ \
 --targets "{\"S3Targets\": [{\"Path\": \"s3://${BUCKET_NAME}/input/lab1/csv\"}, \
                             {\"Path\": \"s3://${BUCKET_NAME}/input/lab5/json\"} ]}"
 ```
