@@ -19,10 +19,10 @@ echo ${AWS_ACCOUNT_ID}
 2. Para verificar como é o arquivo de amostra de dados a ser utilizado execute o comando `c9 open ~/environment/glue-workshop/data/lab1/csv/sample.csv`
 3. Vamos primeiro criar o banco de dados do Glue catalog a ser utilizado. Para isso execute o comando abaixo no terminal do cloud9:
 ``` shell
-aws glue create-database --database-input "{\"Name\":\"cli_glueworkshop\", \"Description\":\"This database is created using AWS CLI\"}"
+aws glue create-database --database-input "{\"Name\":\"console_glueworkshop\", \"Description\":\"This database is created using AWS CLI\"}"
 ```
 
-4. Verifique o banco de dados  criado na página de [serviço do Glue](https://us-east-2.console.aws.amazon.com/glue/home?region=us-east-2#/v2/data-catalog/databases).Você verá um banco de dados com nome **cli_glueworkshop** na seção de bancos de dados do Glue.
+4. Verifique o banco de dados  criado na página de [serviço do Glue](https://us-east-2.console.aws.amazon.com/glue/home?region=us-east-2#/v2/data-catalog/databases).Você verá um banco de dados com nome **console_glueworkshop** na seção de bancos de dados do Glue.
 
     ![](img/cli-glue-db.png)
 
@@ -31,7 +31,7 @@ aws glue create-database --database-input "{\"Name\":\"cli_glueworkshop\", \"Des
 aws glue create-crawler \
 --name cli-lab1 \
 --role AWSGlueServiceRole-glueworkshop \
---database-name cli_glueworkshop \
+--database-name console_glueworkshop \
 --table-prefix cli_ \
 --targets "{\"S3Targets\": [{\"Path\": \"s3://${BUCKET_NAME}/input/lab1/csv\"}, \
                             {\"Path\": \"s3://${BUCKET_NAME}/input/lab5/json\"} ]}"
