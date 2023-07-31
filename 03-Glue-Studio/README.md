@@ -220,3 +220,211 @@ SELECT * FROM "AwsDataCatalog"."console_glueworkshop"."lab5_redacted" order by p
 ![Athena Query](img/lab6-4-16.png)
 
 19. Você deve verificar se a saída contém os valores redigidos de acordo com os critérios de detecção que configuramos anteriormente.Observe que dois números de telefone inválidos permaneceram inalterados, como esperado.
+
+
+
+### Transformações avançadas
+
+1. Em **Create Job**, selecione **Visual with a blank canvas**, clique em **Create**.
+
+![Create Job](img/lab6-2-1.png)
+
+2. Renomeie o job para `glueworkshop-lab5-advanced-job`. Agora você tem um editor de job visual em branco do Studio.
+
+![Job Name](img/lab6-2-2.png)
+
+3. Clique na guia **Job Details** e preencha como a seguir:
+   - IAM role: `AWSGlueServiceRole-glueworkshop`
+   - Glue version: `Glue 3.0 - Support Spark 3.1, Scala 2, Python 3`
+   - Requested number of workers: `4`
+   - Job bookmark: `Disable`
+   - Number of retries: `0`
+
+![Job Details](img/lab6-2-3.png)
+
+4. De volta a guia **Visual**, clique em **Source** e selecione **AWS Glue Data Catalog**
+   - Clique em aba **Data source properties - Data Catalog**
+     - Database: `console_glueworkshop`
+     - Table: `console_json`
+   - Clique na guia `Node properties`
+     - Name: `COVID data`
+
+![Source](img/lab6-2-4.png)
+
+5. Clique em **Source** e selecione **S3**
+- Clique na guia **Data source properties - S3**
+  - S3 source type: `S3 location`
+  - S3 URL: `s3://${BUCKET_NAME}/input/lab5/state/states.csv`
+  - Clique no botão **Infer schema** no final.
+- Clique em **Node properties**
+  - Name: `State Name`
+
+![Source](img/lab6-2-5.png)
+
+
+6. Clique em **Action** e selecione **SQL**:
+- Clique na guia **Node properties**
+  - Name: `Join data`
+  - Em **Node parents**, selecione `COVID data` e `State Name` Clicando na caixa de seleção ao lado
+
+![Action](img/lab6-2-18.png)
+
+7. Clique em **Transform**:
+
+- Input sources: `COVID data`/ Spark SQL aliases: `coviddata`
+- Input sources: `State Name`/ Spark SQL aliases: `statename`
+- Copie o código a seguir no editor de código SQL:
+
+```sql
+SELECT  coviddata.date,
+        coviddata.state,
+        coviddata.positiveincrease,
+        coviddata.totaltestresultsincrease,
+        statename.StateName
+FROM    coviddata LEFT JOIN statename
+        ON  coviddata.state = statename.Code
+WHERE   coviddata.state in ('NY', 'CA')
+```
+
+> Nota - Neste SQL, estamos juntando duas tabelas e filtrando nos estados NY e CA
+
+![Transform](img/lab6-2-6.png)
+
+8. Clique na guia **Output schema**, clique em **Edit** e defina o esquema de saída 1 como o seguinte. Clique em **...**  e adicione a **Add root key** um novo campo no esquema de saída.
+
+- Key: `Key`
+- Data Type: `string`
+Clique em `Apply`
+
+![Output Schema](img/lab6-2-7.png)
+
+9. Clique em **Action** e selecione **Custom transform**
+- Clique na guia **Node properties**
+  - Name: `Multiple Output`
+
+10.  Clique na guia **Transform** e copie o código a seguir no editor de código:
+
+```python
+def CreateMultipleOutput (glueContext, dfc) -> DynamicFrameCollection:
+    df = dfc.select(list(dfc.keys())[0]).toDF()
+    from pyspark.sql import functions as f
+    
+    df.createOrReplaceTempView("inputTable")
+    df0 = spark.sql("SELECT TO_DATE(CAST(UNIX_TIMESTAMP(date, 'yyyyMMdd') AS TIMESTAMP)) as date, \
+                            state , \
+                            (positiveIncrease * 100 / totalTestResultsIncrease) as positivePercentage, \
+                            StateName \
+                    FROM inputTable ")
+    
+    df1 = df.withColumn('CombinedName', f.concat(f.col('StateName'), f.lit('('), f.col('state'), f.lit(')')))
+    
+    dyf0 = DynamicFrame.fromDF(df0, glueContext, "result0")
+    dyf1 = DynamicFrame.fromDF(df1, glueContext, "result1")
+    
+    return DynamicFrameCollection({
+                                    "CustomTransform0": dyf0, 
+                                    "CustomTransform1": dyf1
+                                    }, 
+                                    glueContext)
+```
+
+![Custom Transform](img/lab6-2-8.png)
+
+11. Clique em **Data preview**, clique em **Start data preview session**. No pop up selecione o **IAM Role** de nome `AWSGlueServiceRole-glueworkshop` e clique em `Confirm`
+
+![Data Preview](img/lab6-2-20.png)
+
+Levará alguns minutos para a visualização de dados.
+
+
+![Data Preview](img/lab6-2-21.png)
+
+12. Clique na guia **Output schema**, clique em **Use datapreview schema** e confirme que o esquema de saída é o mesmo que o seguinte para o Output 1 e a Output 2
+
+![Output Schema](img/lab6-2-9.png)
+![Output Schema](img/lab6-2-22.png)
+
+13. Clique em **Action** e selecione **Select From Collection**
+
+- Na guia **Node properties**
+  - Name: `Positive Percentage`
+- Na guia **Transform**
+  - Frame index: `0`
+
+![Select From Collection](img/lab6-2-10.png)
+
+14. Clique em **Action** e selecione **SQL**
+- Na guia **Node properties**
+  - Name: `Pivot by State`
+- Na guia **Transform**
+  - Input sources: `Positive Percentage`/ SQL aliases: `positivepercentage`
+  - Copie o código a seguir no editor de código SQL:
+```sql
+SELECT  date, positivePercentageNY, positivePercentageCA
+FROM    positivepercentage 
+        pivot (avg(positivePercentage) as positivePercentage 
+        for state in ('NY' as positivePercentageNY, 'CA' as positivePercentageCA))
+
+```
+![SQL](img/lab6-2-11.png)
+
+15.  Clique na guia **Output schema**, clique em **Edit** e defina o esquema de saída como no exemplo e clique em **Apply**
+
+![Output Schema](img/lab6-2-12.png)
+
+16. Clique em **Targets** e selecione **Amazon S3**:
+- Na guia **Data target properties - S3**
+  - Format: `JSON`
+  - Compression Type: `None`
+  - S3 Target Location: `s3://${BUCKET_NAME}/output/lab5/advanced/pivot/`
+
+![Target](img/lab6-2-13.png)
+
+17. Clique na caixa **Multiple Output** na tela para destacá-la, clique em **Action** e selecione **Select From Collection**
+- Na guia **Node properties**
+  - Name: `Increase cases`
+- Na guia **Transform**
+  - Frame index: `1`
+
+![Select From Collection](img/lab6-2-14.png)
+
+18. Clique em **Action** e selecione **Custom transform**
+- Na guia **Node properties**
+  - Name: `Aggregate Case Count`
+
+19. Clique na guia **Transform** e copie o código a seguir no editor de código:
+
+```python
+def AggregateCaseCount (glueContext, dfc) -> DynamicFrameCollection:
+    df = dfc.select(list(dfc.keys())[0]).toDF()
+    from pyspark.sql import functions as f
+    
+    df0 = df.groupBy("combinedname").agg({"positiveincrease": "sum", "totaltestresultsincrease": "sum"})
+    dyf0 = DynamicFrame.fromDF(df0, glueContext, "result0")
+    return DynamicFrameCollection({"CustomTransform0": dyf0}, glueContext)
+```
+![Custom Transform](img/lab6-2-15.png)
+
+20. Clique em **Output schema**, clique em **Use datapreview schema** e confirme que o esquema de saída é o mesmo que o seguinte:
+
+![Output Schema](img/lab6-2-16.png)
+
+21. Clique em **Action** e selecione **Select From Collection**
+- Na guia **Node properties**
+  - Name: `Aggregate result`
+- Clique na guia **Transform**
+  - Frame index: `0`
+22. Clique em **Target** e selecione **Amazon S3**:
+- Data target properties - S3
+  - Format: `JSON`
+  - Compression Type: `None`
+  - S3 Target Location: `s3://${BUCKET_NAME}/output/lab5/advanced/aggregate/`
+
+![Target](img/lab6-2-17.png)
+
+23. Clique em **Save** e depois em **Run**.
+24. Clique na guia **Runs** a tela de design para monitorar o status de execução do job. Aguarde o **Run statuso** atualizar para `Succeeded`.
+25. Você pode baixar os arquivos no terminal Cloud9 usando os seguintes comandos e explora-los dentro da cloud9.
+``` shell
+aws s3 cp s3://${BUCKET_NAME}/output/lab5/ ~/environment/glue-workshop/output/lab5 --recursive
+```
