@@ -1,6 +1,13 @@
-# 01 - Glue Catalog
+# 02 - Glue ETL
 
-### Utilizando notebook para criar Glue ETL Job
+### laboratórios neste módulo
+
+- [02 - Glue ETL](#02---glue-etl)
+    - [laboratórios neste módulo](#laboratórios-neste-módulo)
+  - [Utilizando notebook para criar Glue ETL Job](#utilizando-notebook-para-criar-glue-etl-job)
+  - [Rodar o Glue ETL Job](#rodar-o-glue-etl-job)
+
+## Utilizando notebook para criar Glue ETL Job
 
 Para este laboratório, você deve fazer o download dos arquivos do notebook (**glueworkshop-lab3-etl-job.ipynb**) e salvá-lo em um local seguro no computador local:
 
@@ -50,7 +57,7 @@ v![](img/lab3-cell-zero.png)
 13. Basta salvar o job clicando no botão **Save** no canto superior direito do Glue Studio Console (próximo ao botão laranja Run) e é isso!
 14. Depois de salvar o trabalho, clique em Stop Notebook para interromper a sessão do Spark e clique em Trabalhos no menu da extrema esquerda para voltar à sua lista de trabalhos.
 
-### Rodar o Glue ETL Job
+## Rodar o Glue ETL Job
 
 1. Se você ainda não está lá, vá para o [AWS Glue Studio console](https://console.aws.amazon.com/gluestudio/home)  Clique em **Jobs** no menu do lado esquerdo e, na **Your jobs**, você poderá ver o trabalho que você criou na seção anterior deste laboratório.
 

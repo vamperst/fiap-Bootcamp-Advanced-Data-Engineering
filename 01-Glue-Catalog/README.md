@@ -1,6 +1,13 @@
 # 01 - Glue Catalog
 
-### Criando com CLI
+### laboratórios neste módulo
+
+- [01 - Glue Catalog](#01---glue-catalog)
+    - [laboratórios neste módulo](#laboratórios-neste-módulo)
+  - [Criando com CLI](#criando-com-cli)
+  - [Usando notificações do S3](#usando-notificações-do-s3)
+
+## Criando com CLI
 
 1. No terminal do Cloud9 execute os comandos abaixo para garantir que tem as variaveis necessárias para o exercicio disponiveis no terminal.
 
@@ -56,7 +63,7 @@ aws glue start-crawler --name cli-lab1
     ![](img/lab1-6.png)
 
 
-### Usando notificações do S3
+## Usando notificações do S3
 
 Como parte do cloudformation do bootcamp, a notificação de eventos S3 e uma fila SQS que recebem a notificação já foram criadas em seu ambiente de laboratório.
 
