@@ -1,6 +1,14 @@
-# 01 - Glue Studio
+# 03 - Glue Studio
 
-### Transformações Básicas
+### laboratórios neste módulo
+
+- [03 - Glue Studio](#03---glue-studio)
+    - [laboratórios neste módulo](#laboratórios-neste-módulo)
+  - [Transformações Básicas](#transformações-básicas)
+  - [Transformações com PII(Personal Identifiable Information)](#transformações-com-piipersonal-identifiable-information)
+  - [Transformações avançadas](#transformações-avançadas)
+
+## Transformações Básicas
 
 
 1. Abra o menu [Glue Studio](https://console.aws.amazon.com/gluestudio/home) à esquerda e clique em **Jobs**.
@@ -116,7 +124,7 @@ echo "export AWS_ACCOUNT_ID=\"${AWS_ACCOUNT_ID}\"" >> /home/ec2-user/.bashrc
 aws s3 cp s3://${BUCKET_NAME}/output/lab5/ ~/environment/glue-workshop/output/lab5 --recursive
 ```
 
-### Transformações com PII(Personal Identifiable Information)
+## Transformações com PII(Personal Identifiable Information)
 
 1. Em **Create Job**, selecione **Visual with a blank canvas**, clique em **Create**.
 
@@ -223,7 +231,7 @@ SELECT * FROM "AwsDataCatalog"."console_glueworkshop"."lab5_redacted" order by p
 
 
 
-### Transformações avançadas
+## Transformações avançadas
 
 1. Em **Create Job**, selecione **Visual with a blank canvas**, clique em **Create**.
 
