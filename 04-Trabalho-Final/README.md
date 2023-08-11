@@ -1,5 +1,7 @@
 # 04 - Trabalho final
 
+![](img/Trabalho-Final-advanced-data-eng.png)
+
 ### Objetivo
 
 1. Baixar os 2 datasets do trabalho final
